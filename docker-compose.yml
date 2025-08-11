@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  diagnosis-api:
+    build: .
+    container_name: diagnosis-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models  # persist trained model outside container layer
+    environment:
+      - PYTHONHASHSEED=42
+      - FORCE_RETRAIN=0
+    restart: unless-stopped
