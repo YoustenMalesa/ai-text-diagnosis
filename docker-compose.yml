@@ -11,3 +11,8 @@ services:
       - PYTHONHASHSEED=42
       - FORCE_RETRAIN=0
     restart: unless-stopped
+    networks:
+      - mobiclinic-net
+networks:
+  mobiclinic-net:
+    external: true

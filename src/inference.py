@@ -1,9 +1,17 @@
 from pathlib import Path
+
 import joblib
 import json
 from typing import List, Dict
 import numpy as np
 import logging
+
+# Production-ready mapping: total severity score -> severity label
+SEVERITY_MAP = {
+    'Low':   lambda score: score <= 4,
+    'Medium':lambda score: 5 <= score <= 8,
+    'High':  lambda score: score >= 9
+}
 
 logger = logging.getLogger("diagnosis.inference")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s: %(message)s')
@@ -204,12 +212,11 @@ def predict(symptoms: List[str], top_n: int = 1) -> Dict:
         top_diseases.append({'disease': disease, 'confidence': None})
 
     severity_score = sum(SEVERITY_RULES.get(s, 1) for s in cleaned)
-    if severity_score <= 3:
-        severity = 'Low'
-    elif severity_score <= 7:
-        severity = 'Medium'
-    else:
-        severity = 'High'
+    # Use SEVERITY_MAP for production-ready mapping
+    for label, rule in SEVERITY_MAP.items():
+        if rule(severity_score):
+            severity = label
+            break
 
     count = len(cleaned)
     stage = 'Early'

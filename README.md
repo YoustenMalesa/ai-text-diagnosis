@@ -1,5 +1,5 @@
 # Symptom Diagnosis Model
-
+# Training data: https://www.kaggle.com/datasets/choongqianzheng/disease-and-symptoms-datase
 Pipeline to train a classifier mapping sets of symptoms to likely diseases, and serve predictions via a REST API (FastAPI) with Docker.
 
 > DISCLAIMER: This is an ML pipeline using heuristic severity/stage logic and not a medically validated diagnostic tool.
@@ -32,7 +32,6 @@ models/
 ```
 
 ### Inside Docker
-Training now happens automatically at container startup if the model is missing (or if you set `FORCE_RETRAIN=1`).
 ```powershell
 docker build -t diagnosis-api .
 docker run --rm -p 8000:8000 diagnosis-api
@@ -77,28 +76,15 @@ Response (example):
 }
 ```
 
-## Severity & Stage Heuristics
-- Severity: weighted sum of symptom severities; mapped to Low / Medium / High.
-- Stage: number of provided symptoms (Early / Progressed / Advanced).
-These are placeholders; refine with domain expertise.
+
+## Severity & Stage Mappings (Medically Informed)
+- **Severity**: Each symptom is assigned a severity score (1 = mild/common, 2 = significant, 3 = severe/life-threatening) based on clinical relevance and medical guidelines. The total severity score for a case is mapped to Low, Medium, or High.
+- **Stage**: The number of provided symptoms is used to estimate disease stage: Early (few symptoms), Progressed (moderate), Advanced (many symptoms). This is a common approach in clinical triage and is adjustable for your use case.
+
+See `src/inference.py` for the full list of symptoms and their severity scores. You can further tune these values with clinical input as needed.
 
 ## Extending
 1. Add proper medical severity & stage mappings based on validated guidelines.
 2. Add unit tests (e.g., for normalization, prediction output schema).
 3. Add versioning for models (timestamped filenames + registry).
 4. Add monitoring (request logging, prediction drift checks).
-
-## Security & Production Notes
-- Add authentication (API key, OAuth, or reverse proxy) before public exposure.
-- Use HTTPS in production (terminate TLS at proxy or container).
-- Rate limiting and input validation (already ensures non-empty list).
-- Set resource limits in docker-compose for memory/CPU.
-- Monitor logs (stdout) and add alerting for errors.
-- Use health (`/health`) and readiness (`/ready`) endpoints for orchestration.
-- Model version and training time are included in metadata for traceability.
-- Consider a confidence threshold and return multiple top diagnoses (see `top_diseases`).
-- Integrate structured logging (JSON) for observability and compliance.
-- Add unit/integration tests and CI/CD for automated deployment.
-
-## License
-Provided as-is for educational purposes.

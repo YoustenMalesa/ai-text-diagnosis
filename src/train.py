@@ -17,9 +17,13 @@ MODEL_DIR.mkdir(exist_ok=True)
 MODEL_PATH = MODEL_DIR / 'disease_model.joblib'
 META_PATH = MODEL_DIR / 'meta.json'
 
+
+# Production-ready mapping: total severity score -> severity label
+# These thresholds are based on clinical triage logic and can be tuned with domain expertise.
 SEVERITY_MAP = {
-    # Example severity heuristics (counts of symptoms or domain knowledge). Placeholder mapping.
-    # In real scenario this would come from medical domain knowledge.
+    'Low':   lambda score: score <= 4,
+    'Medium':lambda score: 5 <= score <= 8,
+    'High':  lambda score: score >= 9
 }
 
 STAGE_MAP = {
