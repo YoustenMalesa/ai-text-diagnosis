@@ -81,10 +81,4 @@ Response (example):
 - **Severity**: Each symptom is assigned a severity score (1 = mild/common, 2 = significant, 3 = severe/life-threatening) based on clinical relevance and medical guidelines. The total severity score for a case is mapped to Low, Medium, or High.
 - **Stage**: The number of provided symptoms is used to estimate disease stage: Early (few symptoms), Progressed (moderate), Advanced (many symptoms). This is a common approach in clinical triage and is adjustable for your use case.
 
-See `src/inference.py` for the full list of symptoms and their severity scores. You can further tune these values with clinical input as needed.
-
-## Extending
-1. Add proper medical severity & stage mappings based on validated guidelines.
-2. Add unit tests (e.g., for normalization, prediction output schema).
-3. Add versioning for models (timestamped filenames + registry).
-4. Add monitoring (request logging, prediction drift checks).
+See `src/inference.py` for the full list of symptoms and their severity scores.
