@@ -82,3 +82,7 @@ Response (example):
 - **Stage**: The number of provided symptoms is used to estimate disease stage: Early (few symptoms), Progressed (moderate), Advanced (many symptoms). This is a common approach in clinical triage and is adjustable for your use case.
 
 See `src/inference.py` for the full list of symptoms and their severity scores.
+
+## Build and run commands
+Build & Run: docker compose up --build -d
+Run: docker compose up -d
