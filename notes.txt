@@ -1,0 +1,39 @@
+Build an AI project using python that will diagnose medical conditions based on an input of array list of symptoms. The module should expose a REST endpoint that will accept a list of symptoms, the age of the user and gender. The AI will then run logic to determine a diagnosis for the user. The response should include the condition from which the user is likely suffering from, the severity (Low, Medium, High) and Stage (Early, Progressed, Advanced) based on the analysis. The AI should use https://www.kaggle.com/datasets/asjad99/mimiciii or other related datasets to train the model. The AI should be ready to deploy after training and must include docker-compose.yml to package the trained model for deployment
+===============================================
+
+Recommended next steps (ordered)
+
+Solidify dataset pipeline: deterministic splits, data validation (Great Expectations / pandera), logging of class distribution.
+Add experiment tracking (MLflow or Weights & Biases) and model card generation.
+Improve feature engineering (medical vocabulary normalization, negation detection) or move to clinical embeddings (e.g., BioClinicalBERT) with calibration.
+Replace severity/stage heuristics with a separately modeled (or rule/clinical guideline informed) subsystem; add probability calibration (Platt / isotonic).
+Implement comprehensive tests (unit, integration, load) + CI pipeline (lint, type, test, build).
+Add security: auth (API key/JWT), rate limiting, input size limits, dependency vulnerability scan.
+Observability: structured JSON logging, Prometheus metrics (latency, error rate, class distribution), tracing.
+Container hardening: multi-stage Docker, non-root user, pinned hashes (requirements.txt with hashes or lockfile), health/readiness endpoints.
+Add monitoring + drift detection (baseline embeddings distribution, class freq monitors).
+Produce documentation: README (ops), MODEL_CARD.md, disclaimers, risk assessment, data license notes.
+Introduce rollback & versioning (semantic tags) and a staging environment.
+Add explainability (top n-grams or SHAP) and uncertainty (entropy, max prob threshold fallback).
+Conduct bias & performance analysis by age, gender subsets; adjust or warn.
+Until these are addressed, treat this strictly as a prototype. Let me know which area you want to tackle first and I can implement it.
+===========================
+https://www.kaggle.com/datasets/choongqianzheng/disease-and-symptoms-dataset
+------------------------------------------------ audio diagnosis
+https://www.kaggle.com/datasets/arashnic/lung-dataset
+
+Let me know when real files are in place or if you want enhancements (augmentation, better model like CRNN, use log-mel normalization, patient-level stratification refinement, or export to ONNX). Just say the word and I’ll continue.
+
+docker build --build-arg TRAIN=1 --build-arg RAW_DIR=\"data/Audio Files\" --build-arg PROCESSED_DIR=data/processed --build-arg CONFIG_PATH=configs/crnn_baseline.yaml -t audio-diagnosis:train .
+--------------------------------
+
+text diagnosis api
+{
+    "symptoms": [
+        "vomiting",
+        " loss_of_appetite",
+        " abdominal_pain",
+        " passage_of_gases",
+        " internal_itching"
+    ]
+}
